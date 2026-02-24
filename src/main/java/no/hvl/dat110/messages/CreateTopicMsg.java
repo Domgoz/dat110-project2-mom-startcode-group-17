@@ -23,9 +23,6 @@ public class CreateTopicMsg extends Message {
     }
 
     public void setTopic(String topic) {
-        if (topic == null || topic.isBlank()) {
-            throw new IllegalArgumentException("topic is required");
-        }
         this.topic = topic;
     }
 

@@ -28,6 +28,6 @@ public class CreateTopicMsg extends Message {
 
     @Override
     public String toString() {
-        return "CreateTopicMsg[user=" + user + ", topic=" + topic + "]";
+        return "Creating Msg[user=" + user + ", topic=" + topic + "]";
     }
 }

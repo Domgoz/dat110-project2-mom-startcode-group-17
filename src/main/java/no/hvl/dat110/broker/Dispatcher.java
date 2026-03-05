@@ -153,6 +153,13 @@ public class Dispatcher extends Stopable {
 		// topic and message is contained in the subscribe message
 		// messages must be sent using the corresponding client session objects
 		
+		String topic = msg.getTopic();
+		Set<String> pepole = storage.getSubscribers(topic);
+
+		for (String user : pepole) {
+			ClientSession session = storage.getSession(user);
+			session.send(msg);
+		}
 		
 	}
 }

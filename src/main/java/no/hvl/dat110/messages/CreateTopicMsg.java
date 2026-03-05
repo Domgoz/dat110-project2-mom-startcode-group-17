@@ -2,20 +2,11 @@ package no.hvl.dat110.messages;
 
 public class CreateTopicMsg extends Message {
 
-    private String user;
     private String topic;
 
     public CreateTopicMsg(String user, String topic) {
-        setUser(user);
+        super(MessageType.CREATETOPIC, user);
         setTopic(topic);
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
     }
 
     public String getTopic() {
@@ -28,6 +19,6 @@ public class CreateTopicMsg extends Message {
 
     @Override
     public String toString() {
-        return "Creating Msg[user=" + user + ", topic=" + topic + "]";
+        return "Creating Msg[user=" + super.toString() + ", topic=" + topic + "]";
     }
 }

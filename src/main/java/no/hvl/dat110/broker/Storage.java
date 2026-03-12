@@ -3,9 +3,11 @@ package no.hvl.dat110.broker;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import no.hvl.dat110.common.TODO;
 import no.hvl.dat110.common.Logger;
+import no.hvl.dat110.messages.PublishMsg;
 import no.hvl.dat110.messagetransport.Connection;
 
 public class Storage {
@@ -19,9 +21,13 @@ public class Storage {
 	
 	protected ConcurrentHashMap<String, ClientSession> clients;
 
+	// oppdatert for aa huske meldinger til frakoblet subscriber
+	  protected ConcurrentHashMap<String, ConcurrentLinkedQueue<PublishMsg>> buffer;
+
 	public Storage() {
 		subscriptions = new ConcurrentHashMap<String, Set<String>>();
 		clients = new ConcurrentHashMap<String, ClientSession>();
+		buffer = new ConcurrentHashMap<String, ConcurrentLinkedQueue<PublishMsg>>();
 	}
 
 	public Collection<ClientSession> getSessions() {
@@ -107,4 +113,24 @@ public class Storage {
 		subsC.remove(user);
 
 	}
-}
+
+	public void buffer(String user, PublishMsg pmsg) {
+
+		  // legg til ventende melding
+
+		  if (buffer.get(user) == null) {
+				buffer.put(user, new ConcurrentLinkedQueue<PublishMsg>());
+		  }
+		  buffer.get(user).add(pmsg);
+	}
+
+	public ConcurrentLinkedQueue<PublishMsg> getBuffered(String user) {
+		  ConcurrentLinkedQueue<PublishMsg> buffered = buffer.get(user);
+		  if (buffered == null || buffered.isEmpty()) {
+				return null;
+		  }
+		  return buffered;
+
+		  }
+	}
+

@@ -4,13 +4,12 @@ import java.util.Set;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import no.hvl.dat110.common.TODO;
 import no.hvl.dat110.common.Logger;
 import no.hvl.dat110.common.Stopable;
 import no.hvl.dat110.messages.*;
 import no.hvl.dat110.messagetransport.Connection;
 
-public class Dispatcher extends Stopable {
+public class Dispatcher extends Stopable implements DispatcherComponent {
 
 	  private Storage storage;
 
@@ -94,7 +93,7 @@ public class Dispatcher extends Stopable {
 
 			storage.addClientSession(user, connection);
 
-			// hvis har ventende
+			// if has pending
 
 			ConcurrentLinkedQueue<PublishMsg> buffered = storage.getBuffered(user);
 
@@ -104,7 +103,7 @@ public class Dispatcher extends Stopable {
 
 			while (!buffered.isEmpty()) {
 
-				  session.send(msg);
+				  session.send(buffered.poll());
 			}
 	  }
 
@@ -123,7 +122,6 @@ public class Dispatcher extends Stopable {
 
 			Logger.log("onCreateTopic:" + msg.toString());
 
-			// TODO: create the topic in the broker storage
 			// the topic is contained in the create topic message
 			storage.createTopic(msg.getTopic());
 	  }
@@ -132,7 +130,6 @@ public class Dispatcher extends Stopable {
 
 			Logger.log("onDeleteTopic:" + msg.toString());
 
-			// TODO: delete the topic from the broker storage
 			// the topic is contained in the delete topic message
 
 			storage.deleteTopic(msg.getTopic());
@@ -142,7 +139,6 @@ public class Dispatcher extends Stopable {
 
 			Logger.log("onSubscribe:" + msg.toString());
 
-			// TODO: subscribe user to the topic
 			// user and topic is contained in the subscribe message
 
 			storage.addSubscriber(msg.getUser(), msg.getTopic());
@@ -152,7 +148,6 @@ public class Dispatcher extends Stopable {
 
 			Logger.log("onUnsubscribe:" + msg.toString());
 
-			// TODO: unsubscribe user to the topic
 			// user and topic is contained in the unsubscribe message
 
 			storage.removeSubscriber(msg.getUser(), msg.getTopic());
@@ -162,7 +157,6 @@ public class Dispatcher extends Stopable {
 
 			Logger.log("onPublish:" + msg.toString());
 
-			// TODO: publish the message to clients subscribed to the topic
 			// topic and message is contained in the subscribe message
 			// messages must be sent using the corresponding client session objects
 
@@ -178,5 +172,9 @@ public class Dispatcher extends Stopable {
 						session.send(msg);
 				  }
 			}
+	  }
+
+	  protected Storage getStorage() {
+			return this.storage;
 	  }
 }

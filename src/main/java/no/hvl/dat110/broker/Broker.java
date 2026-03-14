@@ -15,9 +15,9 @@ public class Broker extends Stopable {
 	private int maxaccept = 0;
 	
 	private MessagingServer server;
-	private Dispatcher dispatcher;
+	private DispatcherComponent dispatcher;
 		
-	public Broker (Dispatcher dispatcher,int port) {
+	public Broker (DispatcherComponent dispatcher,int port) {
 		super("Broker");
 		server = new MessagingServer(port);
 		this.dispatcher = dispatcher;
@@ -26,7 +26,6 @@ public class Broker extends Stopable {
 	public void setMaxAccept(int n) {
 		this.stopable = true;
 		this.maxaccept = n;
-		
 	}
 	
 	@Override
@@ -52,7 +51,7 @@ public class Broker extends Stopable {
 	}
 	
 	private void waitConnect(Connection connection) {
-				
+
 		Message msg = MessageUtils.receive(connection);
 		
 		if (msg.getType() == MessageType.CONNECT) {

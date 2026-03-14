@@ -2,6 +2,8 @@ package no.hvl.dat110.broker.processing.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import no.hvl.dat110.broker.DispatcherComponent;
+import no.hvl.dat110.broker.multiDispatcherExt.MultiDispatcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +15,7 @@ import no.hvl.dat110.broker.Storage;
 public abstract class Test0Base {
 
 	// TODO: many possibilities for better testing
-	protected Dispatcher dispatcher;
+	protected DispatcherComponent dispatcher;
 	protected Broker broker;
 	protected Storage storage;
 	
@@ -26,7 +28,8 @@ public abstract class Test0Base {
 	public void setUp() throws Exception {
 		
 		storage = new Storage();
-		dispatcher = new Dispatcher(storage);
+		//dispatcher = new Dispatcher(storage);
+		  dispatcher = new MultiDispatcher(storage);
 		broker = new Broker(dispatcher,BROKER_TESTPORT);
 		
 		dispatcher.start();

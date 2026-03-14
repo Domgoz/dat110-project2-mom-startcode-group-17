@@ -21,8 +21,8 @@ public class Storage {
 	
 	protected ConcurrentHashMap<String, ClientSession> clients;
 
-	// oppdatert for aa huske meldinger til frakoblet subscriber
-	  protected ConcurrentHashMap<String, ConcurrentLinkedQueue<PublishMsg>> buffer;
+	//for storing pending messages to disconnected user
+	protected ConcurrentHashMap<String, ConcurrentLinkedQueue<PublishMsg>> buffer;
 
 	public Storage() {
 		subscriptions = new ConcurrentHashMap<String, Set<String>>();
@@ -37,13 +37,12 @@ public class Storage {
 	public Set<String> getTopics() {
 
 		return subscriptions.keySet();
-
 	}
 
-	// get the session object for a given user
-	// session object can be used to send a message to the user
-	
 	public ClientSession getSession(String user) {
+
+		// get the session object for a given user
+		// session object can be used to send a message to the user
 
 		ClientSession session = clients.get(user);
 
@@ -58,7 +57,6 @@ public class Storage {
 
 	public void addClientSession(String user, Connection connection) {
 
-		// TODO: add corresponding client session to the storage
 		// See ClientSession class
 		
 		ClientSession client = new ClientSession(user, connection);
@@ -69,7 +67,6 @@ public class Storage {
 
 	public void removeClientSession(String user) {
 
-		// TODO: disconnet the client (user) 
 		// and remove client session for user from the storage
 		
 		clients.remove(user);
@@ -78,22 +75,16 @@ public class Storage {
 
 	public void createTopic(String topic) {
 
-		// TODO: create topic in the storage
-
 	subscriptions.putIfAbsent(topic, ConcurrentHashMap.newKeySet());
 
 	}
 
 	public void deleteTopic(String topic) {
 
-		// TODO: delete topic from the storage
-
 		subscriptions.remove(topic);		
 	}
 
 	public void addSubscriber(String user, String topic) {
-
-		// TODO: add the user as subscriber to the topic
 		
 		Set<String> subs = subscriptions.get(topic);
 		if (subs == null) {
@@ -106,8 +97,6 @@ public class Storage {
 
 	public void removeSubscriber(String user, String topic) {
 
-		// TODO: remove the user as subscriber to the topic
-
 		Set<String> subsC = getSubscribers(topic);
 		subscriptions.remove(user, subsC);
 		subsC.remove(user);
@@ -116,7 +105,7 @@ public class Storage {
 
 	public void buffer(String user, PublishMsg pmsg) {
 
-		  // legg til ventende melding
+		  // add pending message for disconnected subscriber
 
 		  if (buffer.get(user) == null) {
 				buffer.put(user, new ConcurrentLinkedQueue<PublishMsg>());
@@ -130,7 +119,6 @@ public class Storage {
 				return null;
 		  }
 		  return buffered;
-
 		  }
 	}
 

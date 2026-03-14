@@ -1,5 +1,6 @@
 package no.hvl.dat110.broker;
 
+import no.hvl.dat110.broker.multiDispatcherExt.MultiDispatcher;
 import no.hvl.dat110.common.Logger;
 
 public class BrokerServer extends Thread {
@@ -19,7 +20,7 @@ public class BrokerServer extends Thread {
 		Logger.log("Broker server : " + port);
 		
 		Storage storage = new Storage();
-		Dispatcher dispatcher = new Dispatcher(storage);
+		DispatcherComponent dispatcher = new MultiDispatcher(storage);
 		Broker broker = new Broker(dispatcher,port);
 		
 		// start dispatcher and broker threads

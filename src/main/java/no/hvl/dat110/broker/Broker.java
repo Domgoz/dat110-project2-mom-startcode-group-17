@@ -22,6 +22,12 @@ public class Broker extends Stopable {
 		server = new MessagingServer(port);
 		this.dispatcher = dispatcher;
 	}
+
+	public Broker (Dispatcher dispatcher,int port) {
+		super("Broker");
+		server = new MessagingServer(port);
+		this.dispatcher = dispatcher;
+	}
 	
 	public void setMaxAccept(int n) {
 		this.stopable = true;
